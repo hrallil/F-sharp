@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "cG1goin78B9fe3lTbyp/8erzCj4Pl5OeDxjdFWQNsRsnGa+jRnDaKDalhc4/DgEPl0BWEiJvHRwlenaH+UjbBw==",
+  "success": true,
+  "projectFilePath": "D:\\F#\\PreClassTest\\PreClassTest.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mathi\\.nuget\\packages\\fsharp.core\\6.0.7\\fsharp.core.6.0.7.nupkg.sha512"
+  ],
+  "logs": []
+}
