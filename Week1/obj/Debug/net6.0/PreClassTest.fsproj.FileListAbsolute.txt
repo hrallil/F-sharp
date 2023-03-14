@@ -25,3 +25,9 @@ D:\F#\PreClassTest\obj\Debug\net6.0\PreClassTest.fsproj.CopyComplete
 D:\F#\PreClassTest\obj\Debug\net6.0\PreClassTest.dll
 D:\F#\PreClassTest\obj\Debug\net6.0\PreClassTest.pdb
 D:\F#\PreClassTest\obj\Debug\net6.0\PreClassTest.genruntimeconfig.cache
+C:\Users\mathi\OneDrive\Documents\Git\F-sharp\Week1\obj\Debug\net6.0\PreClassTest.fsproj.AssemblyReference.cache
+C:\Users\mathi\OneDrive\Documents\Git\F-sharp\Week1\obj\Debug\net6.0\PreClassTest.AssemblyInfoInputs.cache
+C:\Users\mathi\OneDrive\Documents\Git\F-sharp\Week1\obj\Debug\net6.0\PreClassTest.AssemblyInfo.fs
+C:\Users\mathi\OneDrive\Documents\Git\F-sharp\Week1\obj\Debug\net6.0\PreClassTest.fsproj.CoreCompileInputs.cache
+C:\Users\mathi\OneDrive\Documents\Git\F-sharp\Week1\obj\Debug\net6.0\PreClassTest.dll
+C:\Users\mathi\OneDrive\Documents\Git\F-sharp\Week1\obj\Debug\net6.0\PreClassTest.pdb

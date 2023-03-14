@@ -6,7 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Program.fs" />
+    <Compile Include="recursion.fs" />
+    <Compile Include="poly.fs" />
+    <Compile Include="matrix.fs" />
+    <Compile Include="handin.fs" />
+
   </ItemGroup>
 
 </Project>

@@ -19,6 +19,16 @@ let solve (a:float,b:float,c:float) =
     ((-b - sqrt d) / 2.0*a,(-b + sqrt d) / 2.0*a)
 
 
+
+type roots = |Zero | One of float|Two of float*float
+let supSolve (a:float,b:float,c:float) = 
+    let d = b**2 - 4.0*a*c
+    if d < 0 then Zero 
+    else if d = 0 then One (-b / 2.0*a)
+    else Two (-b - sqrt d / 2.0*a, -b + sqrt d / 2.0*a)
+
+
+
 //genrelt 2.grad polynomie   
 let eval (a,b,c) (x:float) = 
     a*x**2+b*x+c

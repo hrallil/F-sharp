@@ -117,25 +117,20 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mathi\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\mathi\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\F#\\PreClassTest\\PreClassTest.fsproj",
-      "projectName": "PreClassTest",
-      "projectPath": "D:\\F#\\PreClassTest\\PreClassTest.fsproj",
+      "projectUniqueName": "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\Week1\\week1.fsproj",
+      "projectName": "week1",
+      "projectPath": "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\Week1\\week1.fsproj",
       "packagesPath": "C:\\Users\\mathi\\.nuget\\packages\\",
-      "outputPath": "D:\\F#\\PreClassTest\\obj\\",
+      "outputPath": "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\Week1\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
-      ],
       "configFilePaths": [
         "C:\\Users\\mathi\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"

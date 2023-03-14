@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\Week1\\PreClassTest.fsproj": {}
+    "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\Week1\\week1.fsproj": {}
   },
   "projects": {
-    "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\Week1\\PreClassTest.fsproj": {
+    "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\Week1\\week1.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\Week1\\PreClassTest.fsproj",
-        "projectName": "PreClassTest",
-        "projectPath": "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\Week1\\PreClassTest.fsproj",
+        "projectUniqueName": "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\Week1\\week1.fsproj",
+        "projectName": "week1",
+        "projectPath": "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\Week1\\week1.fsproj",
         "packagesPath": "C:\\Users\\mathi\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\Week1\\obj\\",
         "projectStyle": "PackageReference",
