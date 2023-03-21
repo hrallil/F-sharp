@@ -56,7 +56,7 @@
 
     let rec sum f = function
         | [] -> []
-        | n::_x -> if f n = true then true::sum f _x else false::sum f _x
+        | n::_x -> (f n)::sum f _x 
     
     let f x = x<0;;
     sum f [1;3;2;5;-2;-5];;  -> [false; false; false; false; true; true]
