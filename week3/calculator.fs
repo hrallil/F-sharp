@@ -45,7 +45,7 @@ module calculator
                     | Exp of Fexpr
 
     // Fexpr * float -> Instruction list ----- i guess this is a compiler, that makes a list of instructions from an AST
-    let rec trans Fexpr =
+    let rec trans Fexpr = // should also take an X, but i did not understand what x was
         match Fexpr with 
         | Add (e1,e2) -> trans e1 @ trans e2 @ [ADD]
         | Sub (e1,e2) -> trans e1 @ trans e2 @ [SUB]
