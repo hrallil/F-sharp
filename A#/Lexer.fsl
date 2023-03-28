@@ -1,0 +1,30 @@
+{
+open FSharp.Text.Lexing
+
+let newline (lexbuf : LexBuffer<_>) =
+    lexbuf.StartPos <- lexbuf.StartPos.NextLine
+}
+
+// Regular expressions
+let whitespace = [' ' '\t']
+let newline    = ('\n' | '\r' '\n')
+let letter     = ['a'-'z' 'A'-'Z']
+let digit      = ['0'-'9']
+let int        = '-'?digit+
+let name       = letter (letter | digit)*
+
+// Rules for reading tokens
+rule tokenstream = parse
+  | whitespace { tokenstream lexbuf (* Read more characters *) }
+  | newline    { newline lexbuf;
+                 tokenstream lexbuf (* Read more characters *) }
+  | int        { Parser.INT(int(LexBuffer<_>.LexemeString lexbuf)) }
+  | name       { Parser.NAME(LexBuffer<_>.LexemeString lexbuf) }
+  | '('        { Parser.LPAR  }
+  | ')'        { Parser.RPAR  }
+  | '+'        { Parser.PLUS }
+  | '-'        { Parser.MINUS }
+  | '*'        { Parser.STAR }
+  | '^'        { Parser.HAT }
+  | eof        { Parser.EOF   }
+  | _          { failwith ("ParseError" + LexBuffer<_>.LexemeString lexbuf) }

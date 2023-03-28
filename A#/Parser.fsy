@@ -1,0 +1,37 @@
+%{
+%}
+
+// The start symbol (or non-terminal):
+%start start
+
+// Names of tokens (or terminals):
+%token <int> INT
+%token <string> NAME
+%token PLUS MINUS STAR LPAR RPAR HAT
+%token EOF
+
+// Associativity and precedence:
+%left PLUS MINUS
+%left STAR
+%right HAT
+
+// Declaring the types of the values produced by the different
+// symbols:
+%type <Syntax.exp> start
+%type <Syntax.exp> exp
+
+%%
+
+// Grammar rules along with the F# code to execute when they are
+// reduced:
+start
+  : exp EOF           { $1 }
+
+exp
+  : INT               { Syntax.INT $1 }
+  | NAME              { Syntax.VAR $1 }
+  | exp PLUS exp      { Syntax.ADD($1, $3) }
+  | exp MINUS exp     { Syntax.SUB($1, $3) }
+  | exp STAR exp      { Syntax.MUL($1, $3) }
+  | exp HAT exp       { Syntax.EXP($1, $3) }
+  | LPAR exp RPAR     { $2 }
