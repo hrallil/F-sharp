@@ -4,6 +4,7 @@
     type exp =  | INT of int 
                 | VAR of varName
                 | NEG of exp
+                | LET of varName * exp * exp
                 | MUL of exp * exp
                 | ADD of exp * exp 
                 | SUB of exp * exp
