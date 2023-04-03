@@ -25,6 +25,8 @@ rule tokenstream = parse
   | '+'        { Parser.PLUS }
   | '-'        { Parser.MINUS }
   | '*'        { Parser.STAR }
+  | '='        { Parser.EQ }
   | '^'        { Parser.HAT }
-  | eof        { Parser.EOF   }
+  | "if"       { Parser.IF }
+  | eof        { Parser.EOF }
   | _          { failwith ("ParseError" + LexBuffer<_>.LexemeString lexbuf) }

@@ -13,3 +13,4 @@
                 | MOD of exp * exp
                 | EQ  of exp * exp
                 | LT  of exp * exp
+                | IF  of exp * exp * exp

@@ -8,7 +8,9 @@
 %token <int> INT
 %token <string> NAME
 %token PLUS MINUS STAR LPAR RPAR HAT
+%token EQ
 %token EOF
+%token IF THEN ELSE
 
 // Associativity and precedence:
 %left PLUS MINUS
@@ -25,13 +27,15 @@
 // Grammar rules along with the F# code to execute when they are
 // reduced:
 start
-  : exp EOF           { $1 }
+  : exp EOF                   { $1 }
 
 exp
-  : INT               { Syntax.INT $1 }
-  | NAME              { Syntax.VAR $1 }
-  | exp PLUS exp      { Syntax.ADD($1, $3) }
-  | exp MINUS exp     { Syntax.SUB($1, $3) }
-  | exp STAR exp      { Syntax.MUL($1, $3) }
-  | exp HAT exp       { Syntax.EXP($1, $3) }
-  | LPAR exp RPAR     { $2 }
+  : INT                       { Syntax.INT $1 }
+  | NAME                      { Syntax.VAR $1 }
+  | exp PLUS exp              { Syntax.ADD($1, $3) }
+  | exp MINUS exp             { Syntax.SUB($1, $3) }
+  | exp STAR exp              { Syntax.MUL($1, $3) }
+  | exp HAT exp               { Syntax.EXP($1, $3) }
+  | exp EQ exp                { Syntax.EQ ($1, $3) }
+  | IF exp THEN exp ELSE exp  { Syntax.IF ($2, $4, $6) }
+  | LPAR exp RPAR             { $2 }

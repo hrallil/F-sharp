@@ -13,17 +13,18 @@ module Interpreter
   
 
     let rec eval env = function
-        | Syntax.INT i          -> i
-        | Syntax.NEG e          -> -(eval env e) 
-        | Syntax.VAR e          -> lookUp e env
-        | Syntax.LET (x, e1, e2)-> eval((x,eval env e1)::env) e2
-        | Syntax.ADD (e1, e2)   -> eval env e1 + eval env e2
-        | Syntax.MUL (e1, e2)   -> eval env e1 * eval env e2
-        | Syntax.SUB (e1, e2)   -> eval env e1 - eval env e2
-        | Syntax.DIV (e1, e2)   -> eval env e1 / eval env e2
-        | Syntax.MOD (e1, e2)   -> eval env e1 % eval env e2
-        //| Syntax.EXP (e1, e2)   -> pow (eval env e1) eval(env e2)
-        | Syntax.EQ  (e1, e2)   -> if eval env e1 = eval env e2 then 1 else 0
-        | Syntax.LT  (e1, e2)   -> if eval env e1 < eval env e2 then 1 else 0
+        | Syntax.INT i           -> i
+        | Syntax.NEG e           -> -(eval env e) 
+        | Syntax.VAR e           -> lookUp e env
+        | Syntax.LET (x, e1, e2) -> eval((x,eval env e1)::env) e2
+        | Syntax.ADD (e1, e2)    -> eval env e1 + eval env e2
+        | Syntax.MUL (e1, e2)    -> eval env e1 * eval env e2
+        | Syntax.SUB (e1, e2)    -> eval env e1 - eval env e2
+        | Syntax.DIV (e1, e2)    -> eval env e1 / eval env e2
+        | Syntax.MOD (e1, e2)    -> eval env e1 % eval env e2
+        //| Syntax.EXP (e1, e2)   -> pow (eval env e1) eval(env e2) - becomes a float which is NaN in A# 
+        | Syntax.EQ  (e1, e2)    -> if eval env e1 = eval env e2 then 1 else 0
+        | Syntax.LT  (e1, e2)    -> if eval env e1 < eval env e2 then 1 else 0
+        | Syntax.IF  (e1, e2, e3)-> if eval env e1 = 0 then eval env e2 else eval env e3
 
         //Interpreter.eval [("pi",3)]  (Parse.fromString("5 + pi"));; -interpreter> int : 8
