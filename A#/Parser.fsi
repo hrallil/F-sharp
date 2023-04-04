@@ -12,6 +12,10 @@ type token =
   | LPAR
   | RPAR
   | HAT
+  | DIV
+  | LET
+  | DEF
+  | IN
   | NAME of (string)
   | INT of (int)
 type tokenId = 
@@ -26,6 +30,10 @@ type tokenId =
     | TOKEN_LPAR
     | TOKEN_RPAR
     | TOKEN_HAT
+    | TOKEN_DIV
+    | TOKEN_LET
+    | TOKEN_DEF
+    | TOKEN_IN
     | TOKEN_NAME
     | TOKEN_INT
     | TOKEN_end_of_input

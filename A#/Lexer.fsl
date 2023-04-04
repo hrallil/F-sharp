@@ -25,8 +25,14 @@ rule tokenstream = parse
   | '+'        { Parser.PLUS }
   | '-'        { Parser.MINUS }
   | '*'        { Parser.STAR }
-  | '='        { Parser.EQ }
+  | "=="       { Parser.EQ }
+  | '/'        { Parser.DIV }
   | '^'        { Parser.HAT }
   | "if"       { Parser.IF }
+  | "then"     { Parser.THEN }
+  | "else"     { Parser.ELSE }
+  | "let"      { Parser.LET }
+  | "in"       { Parser.IN }
+  | '='        { Parser.DEF }
   | eof        { Parser.EOF }
   | _          { failwith ("ParseError" + LexBuffer<_>.LexemeString lexbuf) }

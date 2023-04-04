@@ -1,5 +1,6 @@
 ﻿module Syntax
-    type varName = string
+    type varName    = string
+    type funcName   = string
     // Expressions
     type exp =  | INT of int 
                 | VAR of varName
@@ -14,3 +15,7 @@
                 | EQ  of exp * exp
                 | LT  of exp * exp
                 | IF  of exp * exp * exp
+                | CALL of funcName * exp
+
+    type func       = funcName * (varName * exp)
+
