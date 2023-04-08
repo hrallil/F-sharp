@@ -34,5 +34,6 @@ module Interpreter
 
         //--- HOW TO RUN ---//
         //dotnet build
+        //dotnet fsi
         //#load "All.fsx";;
         //Interpreter.evalProg ([],  (Parse.fromFile("code.txt")));; 

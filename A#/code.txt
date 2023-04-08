@@ -1,1 +1,1 @@
-let x = 5 in (x + 5)
+if 0 then 5 else 23

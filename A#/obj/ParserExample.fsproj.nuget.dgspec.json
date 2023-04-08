@@ -1,21 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\A#\\ParserExample.fsproj": {}
+    "F:\\git\\F-sharp\\A#\\ParserExample.fsproj": {}
   },
   "projects": {
-    "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\A#\\ParserExample.fsproj": {
+    "F:\\git\\F-sharp\\A#\\ParserExample.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\A#\\ParserExample.fsproj",
+        "projectUniqueName": "F:\\git\\F-sharp\\A#\\ParserExample.fsproj",
         "projectName": "ParserExample",
-        "projectPath": "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\A#\\ParserExample.fsproj",
+        "projectPath": "F:\\git\\F-sharp\\A#\\ParserExample.fsproj",
         "packagesPath": "C:\\Users\\mathi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\A#\\obj\\",
+        "outputPath": "F:\\git\\F-sharp\\A#\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+        ],
         "configFilePaths": [
           "C:\\Users\\mathi\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"

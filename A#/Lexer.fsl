@@ -19,7 +19,6 @@ rule tokenstream = parse
   | newline    { newline lexbuf;
                  tokenstream lexbuf (* Read more characters *) }
   | int        { Parser.INT(int(LexBuffer<_>.LexemeString lexbuf)) }
-  | name       { Parser.NAME(LexBuffer<_>.LexemeString lexbuf) }
   | '('        { Parser.LPAR  }
   | ')'        { Parser.RPAR  }
   | '+'        { Parser.PLUS }
@@ -35,4 +34,8 @@ rule tokenstream = parse
   | "in"       { Parser.IN }
   | '='        { Parser.DEF }
   | eof        { Parser.EOF }
+  | name       { Parser.NAME(LexBuffer<_>.LexemeString lexbuf) }
   | _          { failwith ("ParseError" + LexBuffer<_>.LexemeString lexbuf) }
+
+
+  //let x = 5 in (x + 5)
