@@ -32,10 +32,12 @@ rule tokenstream = parse
   | "else"     { Parser.ELSE }
   | "let"      { Parser.LET }
   | "in"       { Parser.IN }
+  | "fun"      { Parser.FUNC }
+  
   | '='        { Parser.DEF }
+  | ';'        { Parser.LN }
+  | "/*"       { Parser.CMNT_S }
+  | "*/"       { Parser.CMNT_E }
   | eof        { Parser.EOF }
   | name       { Parser.NAME(LexBuffer<_>.LexemeString lexbuf) }
   | _          { failwith ("ParseError" + LexBuffer<_>.LexemeString lexbuf) }
-
-
-  //let x = 5 in (x + 5)

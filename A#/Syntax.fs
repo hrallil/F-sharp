@@ -15,7 +15,7 @@
                 | EQ  of exp * exp
                 | LT  of exp * exp
                 | IF  of exp * exp * exp
-                | CALL of funcName * exp
+                | CALL of funcName * exp            // f(e)
 
-    type func       = funcName * (varName * exp)
+    type funcDef       = funcName * (varName * exp) // func f x = e; func funcame varName = exp
 

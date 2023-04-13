@@ -1,1 +1,2 @@
-if 0 then 5 else 23
+fun f(x) = x + 5
+f(1) * f(2)

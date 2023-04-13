@@ -37,8 +37,12 @@ module compiler
         | Syntax.EQ  (e1, e2)       -> comp env e1 @ comp env e2 @ [IEQ]
         | Syntax.LT  (e1, e2)       -> comp env e1 @ comp env e2 @ [ILT]
         | Syntax.IF  (e1, e2, e3)   -> comp env e1 @ [IJMPIF "_then"] @ comp env e3  @ [IJMP "_after"] @ [ILAB "_then"] @ comp env e2 @ [IJMP "_after"]
-        
+        | Syntax.CALL (f,e)         -> comp env e1 @ [ICALL f] @ [ISWAP] @ [IPOP]
         
         //compiler.comp ["pi";"3"] (Parse.fromString("5+1+pi"));; -comp>[IPUSH 5; IPUSH 1; IADD; ILOAD 1; IADD]
 
         //VM.exec (asm (compiler.comp ["pi";"3"] (Parse.fromString("5+1+pi"))));; -> 9
+
+    let rec compProg = function
+        | ([],         e1)       -> comp [] e1 @ [IHALT]
+        | ((f,(x,e))::funcs, e1) -> compProg (funcs, e1) @ [ILAB f] @ comp ["";x] e @ [ISWAP] @ [IRETN]

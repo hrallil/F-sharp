@@ -7,11 +7,10 @@
 // Names of tokens (or terminals):
 %token <int> INT
 %token <string> NAME
-%token LET DEF IN
+%token LET DEF FUNC IN IF THEN ELSE
 %token PLUS MINUS STAR LPAR RPAR HAT DIV
 %token EQ
 %token EOF
-%token IF THEN ELSE
 
 
 // Associativity and precedence:
@@ -34,6 +33,7 @@ start
 
 exp
   : INT                       { Syntax.INT $1 }
+  | LPAR exp RPAR             { $2 }
   | NAME                      { Syntax.VAR $1 }
   | LET NAME DEF exp IN exp   { Syntax.LET($2, $4, $6) }  // Interpreter.evalProg ([],  (Parse.fromString("let x = 5 in 2 + x")));;  does not work
   | exp PLUS exp              { Syntax.ADD($1, $3) }
@@ -43,4 +43,7 @@ exp
   | exp EQ exp                { Syntax.EQ ($1, $3) }
   | exp DIV exp               { Syntax.DIV($1, $3) }
   | IF exp THEN exp ELSE exp  { Syntax.IF ($2, $4, $6) }
-  | LPAR exp RPAR             { $2 }
+  // | exp LN exp                { $3 }
+  // | CMNT_S exp CMNT_S         {}
+  | FUNC NAME exp DEF exp     { Syntax.funcDef($2, $3, $5) }
+  | CALL                      {}
