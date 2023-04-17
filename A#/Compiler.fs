@@ -1,6 +1,6 @@
 module compiler
     type label = string
-    type Instruction =  | IADD | ISUB | IMUL | IDIV | SIN
+    type inst =         | IADD | ISUB | IMUL | IDIV | SIN
                         | COS | LOG | EXP | IMOD | IEQ | ILT 
                         | ISWAP | IPOP | IHALT
                         | IPUSH     of int
@@ -29,27 +29,27 @@ module compiler
     let addDummy env = ""::env
 
     let rec comp env = function
-        | Syntax.INT i              -> [IPUSH i]
-        | Syntax.NEG e              -> [IPUSH 0] @ comp env e @ [ISUB]
-        | Syntax.VAR x              -> [ILOAD (varpos x env)]
-        | Syntax.LET (x,e1,e2)      -> comp env e1 @ comp (x::env) e2 @ [ISWAP] @ [IPOP]
-        | Syntax.ADD (e1, e2)       -> comp env e1 @ comp (""::env) e2 @ [IADD]
-        | Syntax.MUL (e1, e2)       -> comp env e1 @ comp env e2 @ [IMUL]
-        | Syntax.SUB (e1, e2)       -> comp env e1 @ comp env e2 @ [ISUB]
-        | Syntax.DIV (e1, e2)       -> comp env e1 @ comp env e2 @ [IDIV]
-        | Syntax.MOD (e1, e2)       -> comp env e1 @ comp env e2 @ [IMOD]
-        | Syntax.EQ  (e1, e2)       -> comp env e1 @ comp env e2 @ [IEQ]
-        | Syntax.LT  (e1, e2)       -> comp env e1 @ comp env e2 @ [ILT]
-        | Syntax.IF  (e1, e2, e3)   -> comp env e1 @ [IJMPIF "_then"] @ comp env e3  @ [IJMP "_after"] @ [ILAB "_then"] @ comp env e2 @ [IJMP "_after"]
-        | Syntax.CALL (f,e)         -> comp env e @ [ICALL f] @ [ISWAP] @ [IPOP]
+        | Syntax.INT i              -> [Asm.IPUSH i]
+        | Syntax.NEG e              -> [Asm.IPUSH 0] @ comp env e @ [Asm.ISUB]
+        | Syntax.VAR x              -> [Asm.ILOAD (varpos x env)]
+        | Syntax.LET (x,e1,e2)      -> comp env e1 @ comp (x::env) e2 @ [Asm.ISWAP] @ [Asm.IPOP]
+        | Syntax.ADD (e1, e2)       -> comp env e1 @ comp (""::env) e2 @ [Asm.IADD]
+        | Syntax.MUL (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.IMUL]
+        | Syntax.SUB (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.ISUB]
+        | Syntax.DIV (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.IDIV]
+        | Syntax.MOD (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.IMOD]
+        | Syntax.EQ  (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.IEQ]
+        | Syntax.LT  (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.ILT]
+        | Syntax.IF  (e1, e2, e3)   -> comp env e1 @ [Asm.IJMPIF "_then"] @ comp env e3  @ [Asm.IJMP "_after"] @ [Asm.ILAB "_then"] @ comp env e2 @ [Asm.IJMP "_after"]
+        | Syntax.CALL (f,e)         -> comp env e @ [Asm.ICALL f] @ [Asm.ISWAP] @ [Asm.IPOP]
         
         //compiler.comp ["pi";"3"] (Parse.fromString("5+1+pi"));; -comp>[IPUSH 5; IPUSH 1; IADD; ILOAD 1; IADD]
 
         //VM.exec (asm (compiler.comp ["pi";"3"] (Parse.fromString("5+1+pi"))));; -> 9
 
     let rec compProg = function
-        | ([],         e1)       -> comp [] e1 @ [IHALT]
-        | ((f,(x,e))::funcs, e1) -> compProg (funcs, e1) @ [ILAB f] @ comp ["";x] e @ [ISWAP] @ [IRETN]
+        | ([],         e1)       -> comp [] e1 @ [Asm.IHALT]
+        | ((f,(x,e))::funcs, e1) -> compProg (funcs, e1) @ [Asm.ILAB f] @ comp ["";x] e @ [Asm.ISWAP] @ [Asm.IRETN]
 
 (*
     let rec check env = function
@@ -61,4 +61,12 @@ module compiler
                                     |TFUN (t2',t) -> let t2 = check env e2 in if t2=t2' then t else failwith "Type error" 
 *)
 
-    let run prog = compProg (Parse.fromFile(prog));;
+    let run prog = VM.exec ( asm ( compProg (Parse.fromFile(prog))))
+
+    // HOW TO RUN // 
+    // dotnet build
+    // dotnet fsi
+    // #r Asm.dll;;
+    // open Asm;;
+    // #load "All.fsx";;
+    // compiler.run "code.txt";;

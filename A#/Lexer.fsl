@@ -24,9 +24,18 @@ rule tokenstream = parse
   | '+'        { Parser.PLUS }
   | '-'        { Parser.MINUS }
   | '*'        { Parser.STAR }
-  | "=="       { Parser.EQ }
+  | '%'        { Parser.MOD }
   | '/'        { Parser.DIV }
   | '^'        { Parser.HAT }
+
+  | "=="       { Parser.EQ }
+  | "!="       { Parser.NEQ }
+  | '<'        { Parser.LT }
+  | '>'        { Parser.GT }
+  | "<="       { Parser.LTEQ }
+  | ">="       { Parser.GTEQ }
+  | "&&"       { Parser.AND }
+  | "||"       { Parser.OR }
   | "if"       { Parser.IF }
   | "then"     { Parser.THEN }
   | "else"     { Parser.ELSE }

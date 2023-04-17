@@ -3,6 +3,13 @@ module Parser
 type token = 
   | EOF
   | EQ
+  | NEQ
+  | LT
+  | GT
+  | LTEQ
+  | GTEQ
+  | AND
+  | OR
   | PLUS
   | MINUS
   | STAR
@@ -10,6 +17,7 @@ type token =
   | RPAR
   | HAT
   | DIV
+  | MOD
   | SEMICOL
   | LET
   | DEF
@@ -23,6 +31,13 @@ type token =
 type tokenId = 
     | TOKEN_EOF
     | TOKEN_EQ
+    | TOKEN_NEQ
+    | TOKEN_LT
+    | TOKEN_GT
+    | TOKEN_LTEQ
+    | TOKEN_GTEQ
+    | TOKEN_AND
+    | TOKEN_OR
     | TOKEN_PLUS
     | TOKEN_MINUS
     | TOKEN_STAR
@@ -30,6 +45,7 @@ type tokenId =
     | TOKEN_RPAR
     | TOKEN_HAT
     | TOKEN_DIV
+    | TOKEN_MOD
     | TOKEN_SEMICOL
     | TOKEN_LET
     | TOKEN_DEF
