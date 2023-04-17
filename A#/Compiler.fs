@@ -60,3 +60,5 @@ module compiler
         | APP (e1,e2) -> match check env e1 with
                                     |TFUN (t2',t) -> let t2 = check env e2 in if t2=t2' then t else failwith "Type error" 
 *)
+
+    let run prog = compProg (Parse.fromFile(prog));;

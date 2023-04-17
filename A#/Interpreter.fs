@@ -1,5 +1,7 @@
 module Interpreter
 
+
+
     type 'a environment = (Syntax.varName * 'a) list
 
     let rec lookUp x env=
@@ -10,6 +12,7 @@ module Interpreter
 
     let rec pow (a:int) (b:int) =
         if b > 0 then a * pow a b-1 else 1
+
 
 
   
@@ -38,8 +41,10 @@ module Interpreter
         eval [("pi",3)] e
 
 
+    let run prog = evalProg (Parse.fromFile(prog));;
+
         //--- HOW TO RUN ---//
         //dotnet build
         //dotnet fsi
         //#load "All.fsx";;
-        //Interpreter.evalProg ([],  (Parse.fromFile("code.txt")));; 
+        //Interpreter.run "code.txt";; 
