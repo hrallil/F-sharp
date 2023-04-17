@@ -33,11 +33,8 @@ rule tokenstream = parse
   | "let"      { Parser.LET }
   | "in"       { Parser.IN }
   | "fun"      { Parser.FUNC }
-  
   | '='        { Parser.DEF }
-  | ';'        { Parser.LN }
-  | "/*"       { Parser.CMNT_S }
-  | "*/"       { Parser.CMNT_E }
+  | ';'        { Parser.SEMICOL }
   | eof        { Parser.EOF }
   | name       { Parser.NAME(LexBuffer<_>.LexemeString lexbuf) }
   | _          { failwith ("ParseError" + LexBuffer<_>.LexemeString lexbuf) }

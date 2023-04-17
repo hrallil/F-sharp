@@ -10,12 +10,18 @@ module Interpreter
 
     let rec pow (a:int) (b:int) =
         if b > 0 then a * pow a b-1 else 1
+
+
   
     let evalProg (funcs, e) = 
         let rec eval env = function
             | Syntax.INT i           -> i
             | Syntax.NEG e           -> -(eval env e) 
             | Syntax.VAR e           -> lookUp e env
+           (* | Syntax.ABS (x, e)      -> Syntax.VC (x, e, env) 
+            | Syntax.APP (e1,e2)     -> let v2 = eval env e2
+                                        match eval env e1 with
+                                            | VC (x,e,env1) -> eval ((x,v2)::env1) e*)
             | Syntax.LET (x, e1, e2) -> eval((x,eval env e1)::env) e2
             | Syntax.ADD (e1, e2)    -> eval env e1 + eval env e2
             | Syntax.MUL (e1, e2)    -> eval env e1 * eval env e2

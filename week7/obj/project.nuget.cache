@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "RQw2qThrZU4EmPVJdde/WohYyMqJq2Kq55qzkqoTaC+FsNYIf5ATq/z+4hrqMV9v7mGW8LDs9wshPvF+DXVu7g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\mathi\\OneDrive\\Documents\\Git\\F-sharp\\week7\\week7.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mathi\\.nuget\\packages\\fsharp.core\\6.0.7\\fsharp.core.6.0.7.nupkg.sha512"
+  ],
+  "logs": []
+}
