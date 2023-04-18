@@ -22,16 +22,17 @@
                 | AND   of exp * exp                  // exp && exp -> false/true (0/1)
                 | OR    of exp * exp                  // exp || exp -> false/true (0/1)
                 | IF    of exp * exp * exp            // if exp then exp else exp -> if 1 then 20 else 10
-                | CALL  of funcName * exp             // funcName exp -> f(e)
+                | CALL  of funcName * exp list        // funcName exp -> f(e)
                 | ABS   of varName * exp              //
                 | APP   of exp * exp                  //
-                | WRITE of varName                    // write("halløj") -> printfn "halløj"
-                | COMMA of exp * exp                  // exp devision, allows printfn "text", 5+4
+                | WRITE of exp                        // write("halløj") -> printfn "halløj"
+                | READ  
                 | NEQ   of exp * exp                  // not equal to: 3 != 5 -> true (1); 5 != 5 -> false (0) 
+
 
     (*
     type value = | VI of int 
                  | VC of varName * exp * value env*)
 
-    type funcDef       = funcName * (varName * exp) // func funcame varName = exp -> func f(x) = e; 
+    type funcDef       = funcName * (varName list * exp) // func funcame varName = exp -> func f(x) = e; 
 

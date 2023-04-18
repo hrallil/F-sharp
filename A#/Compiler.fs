@@ -49,7 +49,7 @@ module compiler
 
     let rec compProg = function
         | ([],         e1)       -> comp [] e1 @ [Asm.IHALT]
-        | ((f,(x,e))::funcs, e1) -> compProg (funcs, e1) @ [Asm.ILAB f] @ comp ["";x] e @ [Asm.ISWAP] @ [Asm.IRETN]
+        //| ((f,(x,e))::funcs, e1) -> compProg (funcs, e1) @ [Asm.ILAB f] @ comp ["";x] e @ [Asm.ISWAP] @ [Asm.IRETN]
 
 (*
     let rec check env = function

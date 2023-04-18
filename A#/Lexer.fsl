@@ -27,7 +27,8 @@ rule tokenstream = parse
   | '%'        { Parser.MOD }
   | '/'        { Parser.DIV }
   | '^'        { Parser.HAT }
-
+  | "write"    { Parser.WRITE }
+  | "read"     { Parser.READ }
   | "=="       { Parser.EQ }
   | "!="       { Parser.NEQ }
   | '<'        { Parser.LT }
@@ -44,6 +45,7 @@ rule tokenstream = parse
   | "fun"      { Parser.FUNC }
   | '='        { Parser.DEF }
   | ';'        { Parser.SEMICOL }
+  | ','        { Parser.COMMA }
   | eof        { Parser.EOF }
   | name       { Parser.NAME(LexBuffer<_>.LexemeString lexbuf) }
   | _          { failwith ("ParseError" + LexBuffer<_>.LexemeString lexbuf) }
