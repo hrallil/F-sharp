@@ -41,7 +41,7 @@ module compiler
         | Syntax.EQ  (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.IEQ]
         | Syntax.LT  (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.ILT]
         | Syntax.IF  (e1, e2, e3)   -> comp env e1 @ [Asm.IJMPIF "_then"] @ comp env e3  @ [Asm.IJMP "_after"] @ [Asm.ILAB "_then"] @ comp env e2 @ [Asm.IJMP "_after"]
-        | Syntax.CALL (f,e)         -> comp env e @ [Asm.ICALL f] @ [Asm.ISWAP] @ [Asm.IPOP]
+        //| Syntax.CALL (f,e)         -> comp env e @ [Asm.ICALL f] @ [Asm.ISWAP] @ [Asm.IPOP]
         
         //compiler.comp ["pi";"3"] (Parse.fromString("5+1+pi"));; -comp>[IPUSH 5; IPUSH 1; IADD; ILOAD 1; IADD]
 
@@ -51,22 +51,13 @@ module compiler
         | ([],         e1)       -> comp [] e1 @ [Asm.IHALT]
         //| ((f,(x,e))::funcs, e1) -> compProg (funcs, e1) @ [Asm.ILAB f] @ comp ["";x] e @ [Asm.ISWAP] @ [Asm.IRETN]
 
-(*
-    let rec check env = function
-        | INT i     -> TINT
-        | VAR x     -> lookUp x env
-        | ABS (x,t,e) -> let t' = check ((x,t)::env) e
-                                        TFUN (t,t')
-        | APP (e1,e2) -> match check env e1 with
-                                    |TFUN (t2',t) -> let t2 = check env e2 in if t2=t2' then t else failwith "Type error" 
-*)
 
     let run prog = VM.exec ( asm ( compProg (Parse.fromFile(prog))))
 
     // HOW TO RUN // 
     // dotnet build
     // dotnet fsi
-    // #r Asm.dll;;
+    // #r "asm.dll";;
     // open Asm;;
     // #load "All.fsx";;
     // compiler.run "code.txt";;

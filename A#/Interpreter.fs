@@ -18,7 +18,7 @@ open System
     let rec bindAll xs vs =
         match (xs,vs) with
             | ([], []) -> []
-            | (x::xs, v::vs) -> [(x,v)]::bindAll xs vs
+            | (x::xs, v::vs) -> (x,v)::bindAll xs vs
 
     let evalProg (funcs, e) = 
         let rec eval env = function
@@ -48,9 +48,8 @@ open System
             | Syntax.CALL(f, es)     -> let rec evalExps es = 
                                             match es with
                                                 | []    -> []
-                                                | e::es -> [eval env e]:: evalExps es
+                                                | e::es -> eval env e:: evalExps es
                                         let vs = evalExps es
-
                                         let (variableNames, body) = lookUp f funcs 
                                         eval (bindAll variableNames vs) body
             
@@ -63,13 +62,7 @@ open System
                                         
 
 
-        eval [("pi",3)] e
-
-    let rec evalExps es = 
-        match es with
-            | []    -> []
-            | e::es -> [eval env e]:: evalExps es
-
+        eval [("pi",3);("dsa",5)] e
  
     let run prog = evalProg (Parse.fromFile(prog))
 
