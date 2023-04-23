@@ -1,4 +1,5 @@
-module compiler
+module Compiler
+
     type label = string
     type inst =         | IADD | ISUB | IMUL | IDIV | SIN
                         | COS | LOG | EXP | IMOD | IEQ | ILT 
@@ -42,24 +43,24 @@ module compiler
 
         // Boolean expressions 
         | Syntax.EQ  (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.IEQ]
-        | Syntax.NEQ (e1, e2)       -> 
+        //| Syntax.NEQ (e1, e2)       -> 
         | Syntax.LT  (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.ILT]
-        | Syntax.GT  (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.IGT]
-        | Syntax.LTEQ(e1, e2)       -> 
-        | Syntax.GTEQ(e1, e2)       -> 
-        | Syntax.AND (e1, e2)       -> 
-        | Syntax.OR  (e1, e2)       -> 
+        //| Syntax.GT  (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.IGT]
+        //| Syntax.LTEQ(e1, e2)       -> 
+        //| Syntax.GTEQ(e1, e2)       -> 
+        //| Syntax.AND (e1, e2)       -> 
+        //| Syntax.OR  (e1, e2)       -> 
 
         // Bigger expressions
         | Syntax.IF  (e1, e2, e3)   -> comp env e1 @ [Asm.IJMPIF "_then"] @ comp env e3  @ [Asm.IJMP "_after"] @ [Asm.ILAB "_then"] @ comp env e2 @ [Asm.IJMP "_after"]
-        | Syntax.CALL (f,e)         -> comp env e @ [Asm.ICALL f] @ [Asm.ISWAP] @ [Asm.IPOP]
+        | Syntax.CALL (f,[e])         -> comp env e @ [Asm.ICALL f] @ [Asm.ISWAP] @ [Asm.IPOP]
         
 
 
     // compiler
     let rec compProg = function
         | ([],         e1)       -> comp [] e1 @ [Asm.IHALT]
-        | ((f,(x,e))::funcs, e1) -> compProg (funcs, e1) @ [Asm.ILAB f] @ comp ["";x] e @ [Asm.ISWAP] @ [Asm.IRETN]
+        | ((f,([x],e))::funcs, e1) -> compProg (funcs, e1) @ [Asm.ILAB f] @ comp ["";x] e @ [Asm.ISWAP] @ [Asm.IRETN]
 
 
     let run prog = VM.exec ( asm ( compProg (Parse.fromFile(prog))))
