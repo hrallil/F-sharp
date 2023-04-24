@@ -1,16 +1,5 @@
 module Compiler
 
-    type label = string
-    type inst =         | IADD | ISUB | IMUL | IDIV | SIN
-                        | COS | LOG | EXP | IMOD | IEQ | ILT 
-                        | ISWAP | IPOP | IHALT
-                        | IPUSH     of int
-                        | ILOAD     of int
-                        | IJMP      of label 
-                        | IJMPIF    of label 
-                        | ILAB      of label
-                        | ICALL     of label
-                        | IRETN     
     
     type 'a environment = (Syntax.varName * 'a) list
 
@@ -18,6 +7,7 @@ module Compiler
 
 
 
+    type label = string
     let mutable labelCount = 0
     let newLabel _ = 
         let this = labelCount + 1
@@ -43,11 +33,11 @@ module Compiler
 
         // Boolean expressions 
         | Syntax.EQ  (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.IEQ]
-        //| Syntax.NEQ (e1, e2)       -> 
+        //| Syntax.NEQ (e1, e2)       -> if comp env e1 = comp env e2 then [Asm.IPUSH 0] else [Asm.IPUSH 1] // feels wrong since i dont think the compiler should do any evaluations
         | Syntax.LT  (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.ILT]
-        //| Syntax.GT  (e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.IGT]
-        //| Syntax.LTEQ(e1, e2)       -> 
-        //| Syntax.GTEQ(e1, e2)       -> 
+        | Syntax.GT  (e1, e2)       -> comp env e2 @ comp env e1 @ [Asm.ILT]
+        | Syntax.LTEQ(e1, e2)       -> comp env e1 @ comp env e2 @ [Asm.ILT] 
+        | Syntax.GTEQ(e1, e2)       -> comp env e2 @ comp env e1 @ [Asm.ILT]
         //| Syntax.AND (e1, e2)       -> 
         //| Syntax.OR  (e1, e2)       -> 
 
@@ -58,9 +48,11 @@ module Compiler
 
 
     // compiler
-    let rec compProg = function
-        | ([],         e1)       -> comp [] e1 @ [Asm.IHALT]
-        | ((f,([x],e))::funcs, e1) -> compProg (funcs, e1) @ [Asm.ILAB f] @ comp ["";x] e @ [Asm.ISWAP] @ [Asm.IRETN]
+    let rec compProg prog  =
+        match prog with    
+            | ([],         prog_e)       -> comp [] prog_e @ [Asm.IHALT]
+            | ((f,([x],func_e))::funcs, prog_e) -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp ["";x] func_e @ [Asm.ISWAP] @ [Asm.IRETN]
+            //| ((f,([x1]::[x2],func_e))::funcs, prog_e) -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp ["";x] func_e @ [Asm.ISWAP] @ [Asm.IRETN]
 
 
     let run prog = VM.exec ( asm ( compProg (Parse.fromFile(prog))))
