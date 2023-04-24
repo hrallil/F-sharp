@@ -17,8 +17,8 @@
                 | EQ    of exp * exp                  // exp==exp -> true/false (1/0)
                 | LT    of exp * exp                  // exp < exp -> true/false (1/0)
                 | GT    of exp * exp                  // exp > exp -> false/true (0/1)
-                | LTEQ  of exp * exp                  // exp < exp -> true/false (1/0)
-                | GTEQ  of exp * exp                  // exp > exp -> false/true (0/1)
+                | LTEQ  of exp * exp                  // exp <= exp -> true/false (1/0)
+                | GTEQ  of exp * exp                  // exp >= exp -> false/true (0/1)
                 | AND   of exp * exp                  // exp && exp -> false/true (0/1)
                 | OR    of exp * exp                  // exp || exp -> false/true (0/1)
                 | IF    of exp * exp * exp            // if exp then exp else exp -> if 1 then 20 else 10
