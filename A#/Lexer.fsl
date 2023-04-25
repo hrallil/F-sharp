@@ -35,6 +35,8 @@ rule tokenstream = parse
   | '>'        { Parser.GT }
   | "<="       { Parser.LTEQ }
   | ">="       { Parser.GTEQ }
+  | "true"     { Parser.TRUE }
+  | "false"    { Parser.FALSE }
   | "&&"       { Parser.AND }
   | "||"       { Parser.OR }
   | "if"       { Parser.IF }

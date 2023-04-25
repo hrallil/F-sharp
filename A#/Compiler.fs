@@ -1,4 +1,5 @@
 module Compiler
+open System
 
     
     type 'a environment = (Syntax.varName * 'a) list
@@ -23,6 +24,8 @@ module Compiler
     let rec comp env = function
         // Simple expressions
         | Syntax.INT i              -> [Asm.IPUSH i]
+        | Syntax.TRUE               -> [Asm.IPUSH 1]
+        | Syntax.FALSE              -> [Asm.IPUSH 0]
         | Syntax.NEG e              -> [Asm.IPUSH 0] @ comp (""::env) e @ [Asm.ISUB]
         | Syntax.VAR x              -> [Asm.ILOAD (varpos x env)]
         | Syntax.LET (x,e1,e2)      -> comp env e1 @ comp (x::env) e2 @ [Asm.ISWAP] @ [Asm.IPOP]
@@ -36,22 +39,30 @@ module Compiler
         | Syntax.EQ  (e1, e2)       -> comp env e1 @ comp (""::env) e2 @ [Asm.IEQ]
         | Syntax.NEQ (e1, e2)       -> comp env e1 @ comp (""::env) e2 @ [Asm.IEQ ; Asm.IPUSH 0 ; Asm.IEQ] // comp env e1 @ comp env e2 @ [Asm.ISUB] gives 0 for not equal but random numbers for equal
         | Syntax.LT  (e1, e2)       -> comp env e1 @ comp (""::env) e2 @ [Asm.ILT]
-        
-        | Syntax.GT  (e1, e2)       -> comp env (Syntax.OR(Syntax.LT(e2,e1), Syntax.EQ(e1,e2))) // gives 1 when e1 = e2 should give 0
-        | Syntax.LTEQ(e1, e2)       -> comp env (Syntax.OR(Syntax.LT(e1,e2), Syntax.EQ(e1,e2)))
-        
-        | Syntax.GTEQ(e1, e2)       -> comp env e2 @ comp (""::env) e1 @ [Asm.ILT]
+        | Syntax.GT  (e1, e2)       -> comp env e2 @ comp (""::env) e1 @ [Asm.ILT]
+        | Syntax.LTEQ(e1, e2)       -> comp env (Syntax.OR(Syntax.LT(e1,e2), Syntax.EQ(e1,e2))) // maybe should be not(b<a) -> not(e) = 1-e || e==0 
+        | Syntax.GTEQ(e1, e2)       -> comp env (Syntax.OR(Syntax.LT(e2,e1), Syntax.EQ(e1,e2)))  // maybe should be not(a<b) -> not(e) = 1-e || e==0
         | Syntax.AND (e1, e2)       -> let Ltrue = newLabel ()
-                                       let Lafter = newLabel () // Could this not just be: comp env e1 @ comp env e2 @ [Asm.IMUL]? since all non-zero numbers are true
+                                       let Lafter = newLabel () // Could be: comp env e1 @ comp env e2 @ [Asm.IMUL]? since all non-zero numbers are true
                                        comp env e1 @ comp (""::env) e2 @ [Asm.IMUL ; Asm.IJMPIF Ltrue ; Asm.IPUSH 0 ; Asm.IJMP Lafter ; Asm.ILAB Ltrue ; Asm.IPUSH 1; Asm.ILAB Lafter]
-        | Syntax.OR  (e1, e2)       -> comp env e1 @ comp (""::env) e2 @ [Asm.IADD] // if e1 = -5 and e2 = 5 -> false, should be true 
+        //| Syntax.OR  (e1, e2)       -> comp env e1 @ comp (""::env) e2 @ [Asm.IADD] // if e1 = -5 and e2 = 5 -> false (0), should be true(non-zero value) 
+        | Syntax.OR  (e1, e2)       -> let Ltrue = newLabel ()
+                                       let Lafter = newLabel ()
+                                       comp env e1 @ [Asm.IJMPIF Ltrue] @ comp env e2 @[Asm.IJMP Lafter ; Asm.ILAB Ltrue ; Asm.IPUSH 1; Asm.ILAB Lafter]
 
         // Bigger expressions
         | Syntax.IF  (e1, e2, e3)   -> let Lthen = newLabel ()
                                        let Lafter = newLabel ()
                                        comp env e1 @ [Asm.IJMPIF Lthen] @ comp env e3  @ [Asm.IJMP Lafter] @ [Asm.ILAB Lthen] @ comp env e2 @ [Asm.IJMP Lafter]
 
-        | Syntax.CALL (f,[e])       -> comp env e @ [Asm.ICALL f] @ [Asm.ISWAP] @ [Asm.IPOP]
+        | Syntax.CALL (f,e::es)     ->  let rec compExps es = 
+                                            match es with
+                                                | [] -> []
+                                                | e::es -> compExps es @ comp env e 
+                                        compExps es @ comp env e @ [Asm.ICALL f] @ [Asm.ISWAP] @ [Asm.IPOP] //Skal bruge en hjælpe function til at udfolde 'es'
+        | Syntax.READ               -> [Asm.IREAD]
+        | Syntax.WRITE (e)          -> comp env e @ [Asm.IWRITE]
+
         
 
 
@@ -59,11 +70,29 @@ module Compiler
     let rec compProg prog  =
         match prog with    
             | ([],         prog_e)       -> comp [] prog_e @ [Asm.IHALT]
-            | ((f,([x],func_e))::funcs, prog_e) -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp ["";x] func_e @ [Asm.ISWAP] @ [Asm.IRETN]
-            //| ((f,([x1]::[x2],func_e))::funcs, prog_e) -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp ["";x] func_e @ [Asm.ISWAP] @ [Asm.IRETN]
+            //| ((f,([x],func_e))::funcs, prog_e) -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp ["";x] func_e @ [Asm.ISWAP] @ [Asm.IRETN]
+            //| ((f,([x1;x2],func_e))::funcs, prog_e) -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp ["";x1;x2] func_e @ [Asm.ISWAP] @ [Asm.IRETN]
+            | ((f,(x::xs, func_e))::funcs, prog_e) -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp (""::x::xs) func_e @ [Asm.ISWAP] @ [Asm.IRETN]
+            
 
 
-    let run prog = VM.exec ( asm ( compProg (Parse.fromFile(prog))))
+    // running Mortens test file. containting one test pr. line
+    let testLines file =
+        for p in System.IO.File.ReadLines file do 
+            printf "Testing program\n    %s\n" p
+            let ast = Parse.fromString p
+            let instrs = compProg ast
+            let code = Asm.asm instrs
+            VM.exec code
+            printf "Done\n\n"
+
+
+    // run the compiler
+    let run prog = 
+        let ast = Parse.fromFile prog
+        let instList = compProg ast
+        let binary = asm instList
+        VM.exec binary
 
     // HOW TO RUN // 
     // dotnet build

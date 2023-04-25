@@ -5,6 +5,8 @@
 
     // Expressions
     type exp =  | INT   of int                        // i -> [0-9]
+                | TRUE
+                | FALSE
                 | VAR   of varName                    // x
                 | NEG   of exp                        // -(exp)
                 | LET   of varName * exp * exp        // let varname = exp in exp -> let x = 5 in 5+x 

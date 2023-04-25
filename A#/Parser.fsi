@@ -11,6 +11,8 @@ type token =
   | GTEQ
   | AND
   | OR
+  | TRUE
+  | FALSE
   | PLUS
   | MINUS
   | STAR
@@ -42,6 +44,8 @@ type tokenId =
     | TOKEN_GTEQ
     | TOKEN_AND
     | TOKEN_OR
+    | TOKEN_TRUE
+    | TOKEN_FALSE
     | TOKEN_PLUS
     | TOKEN_MINUS
     | TOKEN_STAR

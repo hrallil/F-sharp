@@ -17,8 +17,10 @@ open System
     // binds i'th element of xs with the i'th element of vs to eachother
     let rec bindAll xs vs =
         match (xs,vs) with
-            | ([], []) -> []
-            | (x::xs, v::vs) -> (x,v)::bindAll xs vs
+            | ([], [])          -> []
+            | (x::xs, v::vs)    -> (x,v)::bindAll xs vs
+            | (x::xs, [])       -> failwith ("To many variable names, function call needs more input.")
+            | ([], v::vs)       -> failwith ("To many arguments, function definition needs more input")
 
     let evalProg (funcs, e) = 
         let rec eval env = function
