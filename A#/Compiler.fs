@@ -43,9 +43,9 @@ open System
         | Syntax.GT  (e1, e2)       ->  comp env e2 @ comp (""::env) e1 @ [Asm.ILT]
         | Syntax.LTEQ(e1, e2)       ->  comp env (Syntax.OR(Syntax.LT(e1,e2), Syntax.EQ(e1,e2))) // maybe should be not(b<a) -> not(e) = 1-e || e==0 
         | Syntax.GTEQ(e1, e2)       ->  comp env (Syntax.OR(Syntax.LT(e2,e1), Syntax.EQ(e1,e2)))  // maybe should be not(a<b) -> not(e) = 1-e || e==0
-        | Syntax.AND (e1, e2)       ->  let Ltrue = newLabel ()
+        | Syntax.AND (e1, e2)       ->  let Ltrue = newLabel () 
                                         let Lafter = newLabel () // Could be: comp env e1 @ comp env e2 @ [Asm.IMUL]? since all non-zero numbers are true
-                                        comp env e1 @ comp (""::env) e2 @ [Asm.IMUL ; Asm.IJMPIF Ltrue ; Asm.IPUSH 0 ; Asm.IJMP Lafter ; Asm.ILAB Ltrue ; Asm.IPUSH 1; Asm.ILAB Lafter]
+                                        comp env e1 @ [Asm.IJMPIF Ltrue; Asm.IPUSH 0; Asm.IJMP Lafter ; Asm.ILAB Ltrue] @ comp (""::env) e2 @ [Asm.ILAB Lafter] 
         | Syntax.OR  (e1, e2)       ->  let Ltrue = newLabel ()
                                         let Lafter = newLabel ()
                                         comp env e1 @ [Asm.IJMPIF Ltrue] @ comp env e2 @[Asm.IJMP Lafter ; Asm.ILAB Ltrue ; Asm.IPUSH 1; Asm.ILAB Lafter]
@@ -55,7 +55,8 @@ open System
                                         let Lafter = newLabel ()
                                         comp env e1 @ [Asm.IJMPIF Lthen] @ comp env e3  @ [Asm.IJMP Lafter] @ [Asm.ILAB Lthen] @ comp env e2 @ [Asm.ILAB Lafter]
 
-        | Syntax.CALL (f,[])        ->  [Asm.ICALL f] @ [Asm.ISWAP] @ [Asm.IPOP]
+        | Syntax.CALL (f,[])        ->  [Asm.ICALL f]
+
         | Syntax.CALL (f,e::es)     ->  let rec compExps es = 
                                             match es with
                                                 | [] -> []
@@ -90,6 +91,8 @@ open System
 
     // run the compiler
     let run file = 
+        printf "Running code: \n"
+
         let ast = Parse.fromFile file
         let instList = compProg ast
         let binary = asm instList
