@@ -27,24 +27,24 @@ rule tokenstream = parse
   | '%'        { Parser.MOD }
   | '/'        { Parser.DIV }
   | '^'        { Parser.HAT }
-  | "write"    { Parser.WRITE }
-  | "read"     { Parser.READ }
-  | "=="       { Parser.EQ }
-  | "!="       { Parser.NEQ }
   | '<'        { Parser.LT }
   | '>'        { Parser.GT }
+  | "=="       { Parser.EQ }
+  | "!="       { Parser.NEQ }
   | "<="       { Parser.LTEQ }
   | ">="       { Parser.GTEQ }
   | "true"     { Parser.TRUE }
   | "false"    { Parser.FALSE }
   | "&&"       { Parser.AND }
   | "||"       { Parser.OR }
+  | "write"    { Parser.WRITE }
+  | "read"     { Parser.READ }
   | "if"       { Parser.IF }
   | "then"     { Parser.THEN }
   | "else"     { Parser.ELSE }
   | "let"      { Parser.LET }
   | "in"       { Parser.IN }
-  | "fun"      { Parser.FUNC }
+  | "func"     { Parser.FUNC }
   | '='        { Parser.DEF }
   | ';'        { Parser.SEMICOL }
   | ','        { Parser.COMMA }

@@ -51,10 +51,11 @@ NO_NAME_OR_MORE
 
 NAME_OR_MORE
   : NAME                      { [$1] }
-  | NAME COMMA NAME_OR_MORE   { $1::$3 }     
+  | NAME COMMA NAME_OR_MORE   { $1::$3 }
 
 EXPS
-  : exp                       { [$1] }
+  :                           { [] }
+  | exp                       { [$1] }
   | exp COMMA EXPS            { $1::$3 }
 
 exp
