@@ -1,3 +1,5 @@
-func f(x,y) = x+y;
+func f(x,y) = y/x*x;
 
-f(1,2)
+let x=5 in 
+let y=10 in 
+f(x,y)

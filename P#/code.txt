@@ -1,3 +1,6 @@
-funktion f(x) lig hvis x samme som 10 så lad y lig 5 i x plus y ellers skriv(42);
+funktion bmi(vegt,hojde) lig vegt divider hojde gange hojde;
 
-f(10)
+
+lad vegt lig læs i
+lad hojde lig læs i
+bmi(vegt,hojde)
