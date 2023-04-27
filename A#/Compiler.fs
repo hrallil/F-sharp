@@ -91,15 +91,16 @@ open Check
 
     // run the compiler
     let run file = 
-        printf "Running code: \n"
+        printf "\x1b[32mRunning code: \n\x1b[0m"
 
         let ast = Parse.fromFile file
-        if Check.typeError ast = Chekc.typ then
-            let instList = compProg ast
-            let binary = asm instList
-            VM.exec binary
-        else
-            failwith "Type error."
+        let typeOf ast =    match ast with 
+                                | (FDS,exp)   ->  Check.typeError [] exp
+        let progType = typeOf ast
+        let instList = compProg ast
+        let binary = asm instList
+        VM.exec binary
+
 
     let instruction file = compProg(Parse.fromFile file)
     // HOW TO RUN // 

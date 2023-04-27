@@ -9,12 +9,12 @@
                 | FALSE
                 | VAR   of varName                    // x
                 | NEG   of exp                        // -(exp)
-                //| LET   of varName * exp * exp        // let varname = exp in exp -> let x = 5 in 5+x 
+                | LET   of varName * exp * exp        // let varname = exp in exp -> let x = 5 in 5+x 
                 | ADD   of exp * exp                  // exp + exp
                 | SUB   of exp * exp                  // exp - exp
                 | MUL   of exp * exp                  // exp * exp
                 | DIV   of exp * exp                  // exp / exp
-                //| EXP   of exp * exp                  // exp**exp -> isnt used at this moment 
+                | EXP   of exp * exp                  // exp**exp -> isnt used at this moment 
                 | MOD   of exp * exp                  // exp % exp
                 | EQ    of exp * exp                  // exp==exp -> true/false (1/0)
                 | LT    of exp * exp                  // exp < exp -> true/false (1/0)
