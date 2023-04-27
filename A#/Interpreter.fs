@@ -64,7 +64,7 @@ open System
                                         
 
 
-        eval [("pi",3);("dsa",5)] e
+        eval [] e
  
     let run prog = evalProg (Parse.fromFile(prog))
 

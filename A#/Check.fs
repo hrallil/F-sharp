@@ -82,7 +82,7 @@ module Check
                                                                 failwith "\x1b[31mTYPE ERROR: Syntax.IF (if bool then 'a else 'a), both branches must be same type.\x1b[0m"
                                                 | _ -> failwith "\x1b[31mTYPE ERROR: Syntax.IF (if bool then 'a else 'a), first element must be a TBOOL (bool).\x1b[0m"
                 | Syntax.WRITE e        ->  match typeError env e with
-                                                | TINT
+                                                | TINT  -> TINT
                                                 | _     -> failwith "\x1b[31mright now syntax.WRITE can only write TINT\x1b[0m"
                 | Syntax.READ           ->  TINT
                 

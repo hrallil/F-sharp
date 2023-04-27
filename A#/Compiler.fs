@@ -11,7 +11,7 @@ open Check
         "L"+string(labelCount)
 
     let rec varpos x = function
-        | [] -> failwith("unbound variable name: " + x)
+        | [] -> failwith sprintf "\x1b[31mUnbound variable name: %s  \x1b[31m" x
         | y::env -> if x = y then 0 else 1 + varpos x env
 
 
@@ -33,11 +33,11 @@ open Check
         | Syntax.EQ  (e1, e2)       ->  comp env e1 @ comp (""::env) e2 @ [Asm.IEQ]
         | Syntax.NEQ (e1, e2)       ->  comp env e1 @ comp (""::env) e2 @ [Asm.IEQ ; Asm.IPUSH 0 ; Asm.IEQ] 
         | Syntax.LT  (e1, e2)       ->  comp env e1 @ comp (""::env) e2 @ [Asm.ILT]
-        | Syntax.GT  (e1, e2)       ->  comp env e2 @ comp (""::env) e1 @ [Asm.ILT]
+        | Syntax.GT  (e1, e2)       ->  comp env e2 @ comp (""::env) e1 @ [Asm.ILT] 
         | Syntax.LTEQ(e1, e2)       ->  comp env (Syntax.OR(Syntax.LT(e1,e2), Syntax.EQ(e1,e2))) // maybe should be not(b<a) -> not(e) = 1-e || e==0 
-        | Syntax.GTEQ(e1, e2)       ->  comp env (Syntax.OR(Syntax.LT(e2,e1), Syntax.EQ(e1,e2)))  // maybe should be not(a<b) -> not(e) = 1-e || e==0
+        | Syntax.GTEQ(e1, e2)       ->  comp env (Syntax.OR(Syntax.LT(e2,e1), Syntax.EQ(e1,e2))) // maybe should be not(a<b) -> not(e) = 1-e || e==0
         | Syntax.AND (e1, e2)       ->  let Ltrue = newLabel () 
-                                        let Lafter = newLabel () // Could be: comp env e1 @ comp env e2 @ [Asm.IMUL]? since all non-zero numbers are true
+                                        let Lafter = newLabel () 
                                         comp env e1 @ [Asm.IJMPIF Ltrue; Asm.IPUSH 0; Asm.IJMP Lafter ; Asm.ILAB Ltrue] @ comp (""::env) e2 @ [Asm.ILAB Lafter] 
         | Syntax.OR  (e1, e2)       ->  let Ltrue = newLabel ()
                                         let Lafter = newLabel ()
@@ -63,7 +63,7 @@ open Check
                                     compExps env es @ [Asm.ICALL f] @ addSWPO (countExps es)
 
         | Syntax.READ               ->  [Asm.IREAD]
-        | Syntax.WRITE (e)          ->  comp env e @ [Asm.ILOAD 0] @ [Asm.IWRITE] // needs a second look
+        | Syntax.WRITE (e)          ->  comp env e @ [Asm.ILOAD 0] @ [Asm.IWRITE]
 
         
 
@@ -72,7 +72,6 @@ open Check
     let rec compProg prog  =
         match prog with    
             | ([],         prog_e)                  -> comp [] prog_e @ [Asm.IHALT]
-            //| ((f,([x],func_e))::funcs, prog_e) -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp ["";x] func_e @ [Asm.ISWAP] @ [Asm.IRETN]
             | ((f,([],func_e))::funcs, prog_e)      -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp [""] func_e @ [Asm.ISWAP] @ [Asm.IRETN]
             | ((f,(x::xs, func_e))::funcs, prog_e)  -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp (""::List.rev(xs) @ [x]) func_e @ [Asm.ISWAP] @ [Asm.IRETN]
             
@@ -92,7 +91,6 @@ open Check
     // run the compiler
     let run file = 
         printf "\x1b[32mRunning code: \n\x1b[0m"
-
         let ast = Parse.fromFile file
         let typeOf = Check.typeOfProg ast
         let instList = compProg ast
