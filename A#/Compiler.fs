@@ -94,9 +94,7 @@ open Check
         printf "\x1b[32mRunning code: \n\x1b[0m"
 
         let ast = Parse.fromFile file
-        let typeOf ast =    match ast with 
-                                | (FDS,exp)   ->  Check.typeError [] exp
-        let progType = typeOf ast
+        let typeOf = Check.typeOfProg ast
         let instList = compProg ast
         let binary = asm instList
         VM.exec binary
