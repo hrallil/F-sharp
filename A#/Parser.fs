@@ -307,7 +307,7 @@ let _fsyacc_reductions ()  =    [|
                 (
                    (
 # 38 "Parser.fsy"
-                                                         _1, _2 
+                                                      _1, _2 
                    )
 # 38 "Parser.fsy"
                  : (Syntax.funcDef list * Syntax.exp)));

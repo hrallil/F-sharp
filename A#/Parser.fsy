@@ -35,7 +35,7 @@
 // Grammar rules along with the F# code to execute when they are
 // reduced:
 start
-  : FDS exp EOF                   { $1, $2 }
+  : FDS exp EOF                { $1, $2 }
 
 FDS
   :                            { [] }

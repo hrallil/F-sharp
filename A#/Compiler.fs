@@ -1,16 +1,11 @@
 module Compiler
 open System
-
-    
+open Asm
+open Check
     type 'a environment = (Syntax.varName * 'a) list
-
-    type types = | TINT | TFUN
-
-
 
     type label = string
     let mutable labelCount = 0
-
     let newLabel _ = 
         labelCount <- labelCount + 1
         "L"+string(labelCount)
@@ -18,8 +13,6 @@ open System
     let rec varpos x = function
         | [] -> failwith("unbound variable name: " + x)
         | y::env -> if x = y then 0 else 1 + varpos x env
-
-    let addDummy env = ""::env
 
 
     let rec comp env = function
@@ -55,13 +48,20 @@ open System
                                         let Lafter = newLabel ()
                                         comp env e1 @ [Asm.IJMPIF Lthen] @ comp env e3  @ [Asm.IJMP Lafter] @ [Asm.ILAB Lthen] @ comp env e2 @ [Asm.ILAB Lafter]
 
-        | Syntax.CALL (f,[])        ->  [Asm.ICALL f]
-
-        | Syntax.CALL (f,e::es)     ->  let rec compExps es = 
+        | Syntax.CALL (f,es)     -> let rec compExps env es = 
                                             match es with
                                                 | [] -> []
-                                                | e::es -> compExps es @ comp env e 
-                                        compExps es @ comp env e @ [Asm.ICALL f] @ [Asm.ISWAP] @ [Asm.IPOP] 
+                                                | e::es -> comp env e @ compExps (""::env) es  
+                                    let rec countExps es = 
+                                        match es with
+                                            | [] -> 0
+                                            | e::es -> 1 + countExps es
+                                    let rec addSWPO count = 
+                                        match count with
+                                            | 0 -> []
+                                            | _ -> [Asm.ISWAP] @ [Asm.IPOP] @ addSWPO (count-1)
+                                    compExps env es @ [Asm.ICALL f] @ addSWPO (countExps es)
+
         | Syntax.READ               ->  [Asm.IREAD]
         | Syntax.WRITE (e)          ->  comp env e @ [Asm.ILOAD 0] @ [Asm.IWRITE] // needs a second look
 
@@ -71,10 +71,10 @@ open System
     // compiler
     let rec compProg prog  =
         match prog with    
-            | ([],         prog_e)       -> comp [] prog_e @ [Asm.IHALT]
+            | ([],         prog_e)                  -> comp [] prog_e @ [Asm.IHALT]
             //| ((f,([x],func_e))::funcs, prog_e) -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp ["";x] func_e @ [Asm.ISWAP] @ [Asm.IRETN]
-            | ((f,([],func_e))::funcs, prog_e) -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp [""] func_e @ [Asm.ISWAP] @ [Asm.IRETN]
-            | ((f,(x::xs, func_e))::funcs, prog_e) -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp (""::x::xs) func_e @ [Asm.ISWAP] @ [Asm.IRETN]
+            | ((f,([],func_e))::funcs, prog_e)      -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp [""] func_e @ [Asm.ISWAP] @ [Asm.IRETN]
+            | ((f,(x::xs, func_e))::funcs, prog_e)  -> compProg (funcs, prog_e) @ [Asm.ILAB f] @ comp (""::List.rev(xs) @ [x]) func_e @ [Asm.ISWAP] @ [Asm.IRETN]
             
 
 
@@ -94,10 +94,14 @@ open System
         printf "Running code: \n"
 
         let ast = Parse.fromFile file
-        let instList = compProg ast
-        let binary = asm instList
-        VM.exec binary
+        if Check.typeError ast = Chekc.typ then
+            let instList = compProg ast
+            let binary = asm instList
+            VM.exec binary
+        else
+            failwith "Type error."
 
+    let instruction file = compProg(Parse.fromFile file)
     // HOW TO RUN // 
     // dotnet build
     // dotnet fsi
