@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "pAJ9xEjDhf9QeRIO4mHehBADluj1cg7A3tNX/pOa8X+AKK1Ie6sm7Vmn8ume9QEgau9/qDMsO3flPj7Zmldv2g==",
+  "success": true,
+  "projectFilePath": "F:\\git\\F-sharp\\P#\\ParserExample.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mathi\\.nuget\\packages\\fsharp.core\\6.0.7\\fsharp.core.6.0.7.nupkg.sha512",
+    "C:\\Users\\mathi\\.nuget\\packages\\fslexyacc\\10.2.0\\fslexyacc.10.2.0.nupkg.sha512",
+    "C:\\Users\\mathi\\.nuget\\packages\\fslexyacc.runtime\\10.2.0\\fslexyacc.runtime.10.2.0.nupkg.sha512"
+  ],
+  "logs": []
+}

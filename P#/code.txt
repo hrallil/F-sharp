@@ -1,0 +1,3 @@
+funktion f(x) lig hvis x samme som 10 så lad y lig 5 i x plus y ellers skriv(42);
+
+f(10)

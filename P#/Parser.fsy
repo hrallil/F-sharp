@@ -1,0 +1,87 @@
+%{
+%}
+
+// The start symbol (or non-terminal):
+%start start
+
+// Names of tokens (or terminals):
+%token <int> INT
+%token <string> NAME
+%token LET DEF FUNC IN IF THEN ELSE
+%token SEMICOL WRITE READ
+%token PLUS MINUS STAR LPAR RPAR HAT DIV MOD
+%token EQ NEQ LT GT LTEQ GTEQ AND OR TRUE FALSE
+%token EOF
+%token COMMA
+
+// Associativity and precedence:
+%left EQ
+%left PLUS MINUS
+%left STAR DIV MOD
+%right HAT
+
+// Declaring the types of the values produced by the different
+// symbols:
+%type <(Syntax.funcDef list * Syntax.exp)> start
+%type <Syntax.exp> exp
+%type <Syntax.funcDef list> FDS
+%type <Syntax.funcDef> funcDef
+%type <Syntax.varName list> NO_NAME_OR_MORE
+%type <Syntax.varName list> NAME_OR_MORE
+%type <Syntax.exp list> EXPS
+
+%%
+
+// Grammar rules along with the F# code to execute when they are
+// reduced:
+start
+  : FDS exp EOF                { $1, $2 }
+
+FDS
+  :                            { [] }
+  | funcDef FDS                { $1::$2 }
+  
+
+funcDef
+  : FUNC NAME LPAR NO_NAME_OR_MORE RPAR DEF exp SEMICOL     { Syntax.funcDef($2, ($4, $7)) }
+
+NO_NAME_OR_MORE
+  :                           { [] }
+  | NAME_OR_MORE              { $1 }
+
+NAME_OR_MORE
+  : NAME                      { [$1] }
+  | NAME COMMA NAME_OR_MORE   { $1::$3 }
+
+EXPS
+  :                           { [] }
+  | exp                       { [$1] }
+  | exp COMMA EXPS            { $1::$3 }
+
+exp
+  : INT                       { Syntax.INT $1 }
+  | TRUE                      { Syntax.TRUE}
+  | FALSE                     { Syntax.FALSE}
+  | LPAR exp RPAR             { $2 }
+  | LET NAME DEF exp IN exp   { Syntax.LET($2, $4, $6) }
+  | MINUS exp                 { Syntax.NEG($2) }
+  | exp PLUS exp              { Syntax.ADD($1, $3) }
+  | exp MINUS exp             { Syntax.SUB($1, $3) }
+  | exp STAR exp              { Syntax.MUL($1, $3) }
+  | exp HAT exp               { Syntax.EXP($1, $3) }
+  | exp DIV exp               { Syntax.DIV($1, $3) }
+  | IF exp THEN exp ELSE exp  { Syntax.IF ($2, $4, $6) }
+  | WRITE LPAR exp RPAR       { Syntax.WRITE($3) }
+  | READ                      { Syntax.READ }
+  | NAME LPAR EXPS RPAR       { Syntax.CALL($1, $3) }
+  | exp NEQ exp               { Syntax.NEQ($1, $3) }
+  | exp MOD exp               { Syntax.MOD($1, $3) }
+  | exp EQ exp                { Syntax.EQ ($1, $3) }
+  | exp LT exp                { Syntax.LT($1, $3) }
+  | exp LTEQ exp              { Syntax.LTEQ($1, $3) }
+  | exp GT exp                { Syntax.GT($1, $3) }
+  | exp GTEQ exp              { Syntax.GTEQ($1, $3) }
+  | exp AND exp               { Syntax.AND($1, $3) }
+  | exp OR exp                { Syntax.OR($1, $3) }
+  | NAME                      { Syntax.VAR $1 }
+

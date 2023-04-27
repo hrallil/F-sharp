@@ -1,0 +1,53 @@
+{
+open FSharp.Text.Lexing
+
+let newline (lexbuf : LexBuffer<_>) =
+    lexbuf.StartPos <- lexbuf.StartPos.NextLine
+}
+
+// Regular expressions
+let whitespace = [' ' '\t']
+let newline    = ('\n' | '\r' '\n')
+let letter     = ['a'-'z' 'A'-'Z']
+let digit      = ['0'-'9']
+let int        = '-'?digit+
+let name       = letter (letter | digit)*
+
+// Rules for reading tokens
+rule tokenstream = parse
+  | whitespace { tokenstream lexbuf (* Read more characters *) }
+  | newline    { newline lexbuf;
+                 tokenstream lexbuf (* Read more characters *) }
+  | int        { Parser.INT(int(LexBuffer<_>.LexemeString lexbuf)) }
+  | '('        { Parser.LPAR  }
+  | ')'        { Parser.RPAR  }
+  | "plus"       { Parser.PLUS }
+  | "minus"        { Parser.MINUS }
+  | "gange"        { Parser.STAR }
+  | "modulus"        { Parser.MOD }
+  | "divider"        { Parser.DIV }
+  | "potense"        { Parser.HAT }
+  | "mindre end"       { Parser.LT }
+  | "større end"        { Parser.GT }
+  | "samme som"       { Parser.EQ }
+  | "ikke samme som"       { Parser.NEQ }
+  | "mindre eller lig med"       { Parser.LTEQ }
+  | "større eller lig med"       { Parser.GTEQ }
+  | "sand"     { Parser.TRUE }
+  | "falsk"    { Parser.FALSE }
+  | "og"       { Parser.AND }
+  | "eller"       { Parser.OR }
+  | "skriv"    { Parser.WRITE }
+  | "læs"     { Parser.READ }
+  | "hvis"       { Parser.IF }
+  | "så"     { Parser.THEN }
+  | "ellers"     { Parser.ELSE }
+  | "lad"      { Parser.LET }
+  | "i"       { Parser.IN }
+  | "funktion"     { Parser.FUNC }
+  | "lig"        { Parser.DEF }
+  | ';'        { Parser.SEMICOL }
+  | ','        { Parser.COMMA }
+  | eof        { Parser.EOF }
+  | name       { Parser.NAME(LexBuffer<_>.LexemeString lexbuf) }
+  | _          { failwith ("ParseError" + LexBuffer<_>.LexemeString lexbuf) }
