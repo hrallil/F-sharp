@@ -1,20 +1,12 @@
 module Interpreter
 open System
-
-
-
-    type 'a environment = (Syntax.varName * 'a) list
-
+    // function that looks up the variable value in an env, from the variable name
     let rec lookUp x env=
         match env with
         | []                -> failwith ("unbound variable name: " + x)
         | (key, value)::env -> if key = x then value else lookUp x env
 
-
-    let rec pow (a:int) (b:int) =
-        if b > 0 then a * pow a b-1 else 1
-
-    // binds i'th element of xs with the i'th element of vs to eachother
+    // binds i'th element of xs with the i'th element of vs to eachother. List.zip('a list, 'b list)
     let rec bindAll xs vs =
         match (xs,vs) with
             | ([], [])          -> []
@@ -22,7 +14,9 @@ open System
             | (x::xs, [])       -> failwith ("To many variable names, function call needs more input.")
             | ([], v::vs)       -> failwith ("To many arguments, function definition needs more input")
 
+    // interpreter of program
     let evalProg (funcs, e) = 
+        // interpreter of single expression
         let rec eval env = function
             // Simple expressions
             | Syntax.INT i           -> i
@@ -61,21 +55,12 @@ open System
                                         v
             | Syntax.READ            -> let v = Console.ReadLine()
                                         Int32.Parse(v)
-                                        
-
-
         eval [] e
  
+    // helper function that runs lexer, parser and interpreter on a file
     let run prog = evalProg (Parse.fromFile(prog))
-
         //--- HOW TO RUN ---//
         //dotnet build
         //dotnet fsi
-        //#load "All.fsx";;
+        //#load "All.fsx";;*
         //Interpreter.run "code.txt";; 
-
-
-    (*  | Syntax.AND (e1, e2)    -> if eval env e1 = eval env e2 && eval env e2 == 1 then 1 else 0
-        | Syntax.AND (e1, e2)    -> if eval env e1  && eval env e2 == 1 then 1 else 0
-        | Syntax.OR  (e1, e2)    -> if eval env e1 || eval env e2 then 1 else 0
-*)

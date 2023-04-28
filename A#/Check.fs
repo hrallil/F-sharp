@@ -1,17 +1,20 @@
-module Check
-
+module Check 
+    // type checker. This file will be run before the compiler compiles the AST, 
+    // and will return the value of the program, and if there is a type error, it will escape the program
     [<StructuralEquality;NoComparison>]
+    // all types in program
     type typ = 
         | TINT 
         | TBOOL 
 
-
+    // function that will look up the Type value of a variable 
     let rec lookup x = function
         | []            -> failwith (sprintf "\x1b[31munbound: %s \x1b[0m" x)
         | (y, w) :: env -> if x = y then w else lookup x env
 
-    
+    // Type checker of program (AST)
     let typeOfProg (funcDefs,exp) =
+        // Type checker of expression 
         let rec typeError env exp = 
             match exp with
                 // Simple type checks

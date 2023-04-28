@@ -4,17 +4,19 @@ open Asm
 open Check
     type 'a environment = (Syntax.varName * 'a) list
 
+    // function that returns an unused label for the compiler
     type label = string
     let mutable labelCount = 0
     let newLabel _ = 
         labelCount <- labelCount + 1
         "L"+string(labelCount)
 
+    // Function that returns the stack position of a variable
     let rec varpos x = function
         | [] -> failwith (sprintf "\x1b[31mUnbound variable name: %s  \x1b[31m" x)
         | y::env -> if x = y then 0 else 1 + varpos x env
 
-
+    //Compiler for one expression
     let rec comp env = function
         // Simple expressions
         | Syntax.INT i              ->  [Asm.IPUSH i]
@@ -61,14 +63,14 @@ open Check
                                             | 0 -> []
                                             | _ -> [Asm.ISWAP] @ [Asm.IPOP] @ addSWPO (count-1)
                                     compExps env es @ [Asm.ICALL f] @ addSWPO (countExps es)
-
+        // A# I/O
         | Syntax.READ               ->  [Asm.IREAD]
         | Syntax.WRITE (e)          ->  comp env e @ [Asm.ILOAD 0] @ [Asm.IWRITE]
 
         
 
 
-    // compiler
+    // Compiler of a full program (AST)
     let rec compProg prog  =
         match prog with    
             | ([],         prog_e)                  -> comp [] prog_e @ [Asm.IHALT]
@@ -77,7 +79,7 @@ open Check
             
 
 
-    // running Mortens test file. containting one test pr. line
+    // Running Mortens test file (tests.txt), Containting one test pr. line
     let testLines file =
         for p in System.IO.File.ReadLines file do 
             printf "Testing program\n    %s\n" p
@@ -88,7 +90,7 @@ open Check
             printf "Done\n\n"
 
 
-    // run the compiler
+    // helper function which will lex and parse a file into an AST, type check and compile it and send the instructions to the VM to return a result.
     let run file = 
         printf "\x1b[32mRunning code: \n\x1b[0m"
         let ast = Parse.fromFile file
@@ -97,12 +99,14 @@ open Check
         let binary = asm instList
         VM.exec binary
 
+    // helper function which will return instructions of file
+    let instOf file = compProg(Parse.fromFile file)
 
-    let instruction file = compProg(Parse.fromFile file)
-    // HOW TO RUN // 
+    // helper function which will return AST of file
+    let AstOf file = Parse.fromFile file
+    
+    // HOW TO RUN COMPILER // 
     // dotnet build
     // dotnet fsi
-    // #r "asm.dll";;
-    // open Asm;;
     // #load "All.fsx";;
     // compiler.run "code.txt";;
