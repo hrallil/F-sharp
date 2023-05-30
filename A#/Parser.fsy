@@ -1,10 +1,9 @@
 %{
 %}
-
 // The start symbol (or non-terminal):
 %start start
 
-// Names of tokens (or terminals):
+// Names of all terminals:
 %token <int> INT
 %token <string> NAME
 %token LET DEF FUNC IN IF THEN ELSE
@@ -20,8 +19,7 @@
 %left STAR DIV MOD
 %right HAT
 
-// Declaring the types of the values produced by the different
-// symbols:
+// Names of all non-terminals
 %type <(Syntax.funcDef list * Syntax.exp)> start
 %type <Syntax.exp> exp
 %type <Syntax.funcDef list> FDS
@@ -34,17 +32,21 @@
 
 // Grammar rules along with the F# code to execute when they are
 // reduced:
+// Program Start value
 start
   : FDS exp EOF                { $1, $2 }
 
+// non-terminal which allows for multiple function definitions in a program
 FDS
   :                            { [] }
   | funcDef FDS                { $1::$2 }
   
 
+// non-ternimal for function definition
 funcDef
   : FUNC NAME LPAR NO_NAME_OR_MORE RPAR DEF exp SEMICOL     { Syntax.funcDef($2, ($4, $7)) }
 
+// non-Terminal which allows for multiple varNames in a function definition
 NO_NAME_OR_MORE
   :                           { [] }
   | NAME_OR_MORE              { $1 }
@@ -53,11 +55,13 @@ NAME_OR_MORE
   : NAME                      { [$1] }
   | NAME COMMA NAME_OR_MORE   { $1::$3 }
 
+// non-terminal which allows for multiple expressions inside of a function call
 EXPS
   :                           { [] }
   | exp                       { [$1] }
   | exp COMMA EXPS            { $1::$3 }
 
+// non-terminal of what an expression can be composed of
 exp
   : INT                       { Syntax.INT $1 }
   | TRUE                      { Syntax.TRUE}

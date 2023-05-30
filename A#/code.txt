@@ -1,5 +1,5 @@
-func f(x,y) = y/x*x;
+func bmi(w,h) = w/h*h;
 
-let x=5 in 
-let y=10 in 
-f(x,y)
+let x=read in 
+let y=read in 
+bmi(x,y)
