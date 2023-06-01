@@ -42,7 +42,7 @@ FDS
   | funcDef FDS                { $1::$2 }
   
 
-// non-ternimal for function definition
+// ternimal for function definition
 funcDef
   : FUNC NAME LPAR NO_NAME_OR_MORE RPAR DEF exp SEMICOL     { Syntax.funcDef($2, ($4, $7)) }
 

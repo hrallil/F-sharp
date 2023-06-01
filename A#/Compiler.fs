@@ -50,7 +50,7 @@ open Check
                                         let Lafter = newLabel ()
                                         comp env e1 @ [Asm.IJMPIF Lthen] @ comp env e3  @ [Asm.IJMP Lafter] @ [Asm.ILAB Lthen] @ comp env e2 @ [Asm.ILAB Lafter]
 
-        | Syntax.CALL (f,es)     -> let rec compExps env es = 
+        | Syntax.CALL (f,es)        -> let rec compExps env es = 
                                             match es with
                                                 | [] -> []
                                                 | e::es -> comp env e @ compExps (""::env) es  
@@ -104,6 +104,9 @@ open Check
 
     // helper function which will return AST of file
     let AstOf file = Parse.fromFile file
+
+    // helper function which will return binary of file
+    let binaryOf file = asm (compProg(Parse.fromFile file))
     
     // HOW TO RUN COMPILER // 
     // dotnet build
